@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>hot-item-model</module>
+        <module>data-flow-model</module>
     </modules>
 
     <properties>
