@@ -11,6 +11,8 @@
     <modules>
         <module>hot-item-model</module>
         <module>data-flow-model</module>
+        <module>marketing-model</module>
+        <module>login-fail-model</module>
     </modules>
 
     <properties>

@@ -1,15 +1,12 @@
 package com.atguigu.app
 
 import java.lang
-import java.sql.Timestamp
 
 import com.atguigu.bean.{UserBehavior, UvCount}
-import org.apache.flink.api.common.functions.AggregateFunction
-import org.apache.flink.api.common.state.{ValueState, ValueStateDescriptor}
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.TimeCharacteristic
-import org.apache.flink.streaming.api.scala.function.{AllWindowFunction, ProcessWindowFunction}
 import org.apache.flink.streaming.api.scala._
+import org.apache.flink.streaming.api.scala.function.ProcessWindowFunction
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.windowing.triggers.{Trigger, TriggerResult}
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
