@@ -6,9 +6,9 @@ import com.atguigu.bean.{AdClickLog, BlackListWarning, CountByProvince}
 import org.apache.flink.api.common.functions.AggregateFunction
 import org.apache.flink.api.common.state.{ValueState, ValueStateDescriptor}
 import org.apache.flink.streaming.api.TimeCharacteristic
-import org.apache.flink.streaming.api.functions.{KeyedProcessFunction, ProcessFunction}
-import org.apache.flink.streaming.api.scala.function.WindowFunction
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction
 import org.apache.flink.streaming.api.scala._
+import org.apache.flink.streaming.api.scala.function.WindowFunction
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import org.apache.flink.util.Collector
@@ -21,9 +21,11 @@ object AdClickApp {
     //1.创建执行环境
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
+    env.setParallelism(1)
 
     //2.读取数据
-    val lineDStream: DataStream[String] = env.readTextFile("input/AdClickLog.csv")
+    //    val lineDStream: DataStream[String] = env.readTextFile("input/AdClickLog.csv")
+    val lineDStream: DataStream[String] = env.socketTextStream("hadoop102", 9999)
 
     //3.转换为样例类并指定事件时间字段
     val adClickDStream: DataStream[AdClickLog] = lineDStream.map(line => {
@@ -75,7 +77,6 @@ class AdClickWindowFunction extends WindowFunction[Long, CountByProvince, String
     val windowEnd: String = new Timestamp(window.getEnd).toString
 
     out.collect(CountByProvince(windowEnd, key, input.head))
-
   }
 }
 
@@ -101,6 +102,7 @@ class FilterByBlackList extends KeyedProcessFunction[(Long, Long), AdClickLog, A
 
     //定时器用于触发隔天凌晨删除状态的操作
     val ts: Long = (ctx.timerService().currentProcessingTime() / (1000 * 60 * 60 * 24) + 1) * (1000 * 60 * 60 * 24)
+    println(ctx.timerService().currentWatermark())
     ctx.timerService().registerEventTimeTimer(ts)
 
     //获取状态信息
