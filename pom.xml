@@ -13,6 +13,7 @@
         <module>data-flow-model</module>
         <module>marketing-model</module>
         <module>login-fail-model</module>
+        <module>order-pay-model</module>
     </modules>
 
     <properties>
@@ -42,6 +43,12 @@
             <artifactId>flink-connector-kafka_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-cep-scala_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
